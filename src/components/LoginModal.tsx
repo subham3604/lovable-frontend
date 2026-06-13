@@ -51,38 +51,33 @@ export function LoginModal() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-      {/* Background gradient */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/3 left-1/3 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
-      </div>
-
-      <div className="relative w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-background relative overflow-hidden">
+      <div className="relative w-full max-w-[420px] z-10">
         {/* Card */}
-        <div className="bg-card border border-border/50 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-card border border-border rounded-lg p-8 shadow-2xl">
           {/* Logo */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-primary/20 mb-5">
-              <Sparkles className="w-7 h-7 text-primary" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 mb-5 glow-effect">
+              <Sparkles className="w-6 h-6 text-primary" />
             </div>
-            <h1 className="text-2xl font-semibold text-foreground mb-2">Welcome to Lovable</h1>
-            <p className="text-muted-foreground text-sm">Sign in to continue building</p>
+            <h1 className="text-3xl font-bold font-display tracking-tight text-white mb-2">Welcome to Genesis</h1>
+            <p className="text-muted-foreground/60 text-sm">Sign in to continue building</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium text-foreground">
-                Email
+              <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
+                Email Address
               </Label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="you@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="pl-10 h-12 bg-muted/50 border-border/50 focus:border-primary rounded-xl text-sm"
+                  className="pl-10 h-11 bg-background border-border focus-visible:ring-ring rounded-lg text-sm"
                   disabled={isLoading}
                   autoComplete="off"
                 />
@@ -90,18 +85,18 @@ export function LoginModal() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium text-foreground">
+              <Label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
                 Password
               </Label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
                 <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="pl-10 h-12 bg-muted/50 border-border/50 focus:border-primary rounded-xl text-sm"
+                  className="pl-10 h-11 bg-background border-border focus-visible:ring-ring rounded-lg text-sm"
                   disabled={isLoading}
                   autoComplete="new-password"
                 />
@@ -111,7 +106,7 @@ export function LoginModal() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-xl text-sm"
+              className="w-full h-11 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg text-sm mt-2"
             >
               {isLoading ? (
                 <>
@@ -124,9 +119,9 @@ export function LoginModal() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-muted-foreground mt-6">
+          <p className="text-center text-sm text-muted-foreground/60 mt-8">
             Don't have an account?{" "}
-            <Link to="/signup" className="text-primary hover:underline font-medium">
+            <Link to="/signup" className="text-primary hover:text-primary/90 font-medium underline-offset-4 hover:underline">
               Sign up
             </Link>
           </p>

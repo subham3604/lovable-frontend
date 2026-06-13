@@ -78,39 +78,39 @@ export const BillingPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 p-6">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-8">Billing & Subscription</h1>
+    <div className="min-h-screen bg-background py-16 px-6 relative overflow-hidden">
+      <div className="max-w-4xl mx-auto relative z-10">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 tracking-tight font-display bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">Billing & Subscription</h1>
 
         {/* Current Subscription */}
         {subscription && (
-          <Card className="bg-slate-800/50 border-slate-700 mb-8">
+          <Card className="bg-white/[0.02] border-white/5 mb-8 rounded-2xl backdrop-blur-md p-2">
             <CardHeader>
-              <CardTitle className="text-white">Current Subscription</CardTitle>
+              <CardTitle className="text-white font-display text-lg font-bold">Current Subscription</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-8">
+              <div className="grid md:grid-cols-2 gap-8 bg-white/[0.02] p-6 rounded-xl border border-white/5">
                 <div>
-                  <p className="text-slate-400 text-sm mb-2">Plan</p>
-                  <p className="text-2xl font-bold text-white">{subscription.plan.name}</p>
-                  <p className="text-slate-400 mt-1">₹{getPlanPrice(subscription.plan.name) ?? subscription.plan.price}/month</p>
+                  <p className="text-muted-foreground/60 text-xs font-semibold uppercase tracking-wider mb-2">Plan</p>
+                  <p className="text-xl font-bold text-white font-display">{subscription.plan.name}</p>
+                  <p className="text-muted-foreground mt-1 text-sm">₹{getPlanPrice(subscription.plan.name) ?? subscription.plan.price}/month</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 text-sm mb-2">Status</p>
-                  <p className="text-2xl font-bold text-green-500 capitalize">
+                  <p className="text-muted-foreground/60 text-xs font-semibold uppercase tracking-wider mb-2">Status</p>
+                  <p className="text-xl font-bold text-emerald-400 capitalize font-display">
                     {subscription.status}
                   </p>
                   {subscription.plan.price === "0" ? (
-                    <p className="text-slate-400 mt-1">No renewal required</p>
+                    <p className="text-muted-foreground mt-1 text-sm">No renewal required</p>
                   ) : (
-                    <p className="text-slate-400 mt-1">
+                    <p className="text-muted-foreground mt-1 text-sm">
                       Renews on{" "}
                       {format(new Date(subscription.currentPeriodEnd), "MMM dd, yyyy")}
                     </p>
@@ -119,14 +119,25 @@ export const BillingPage = () => {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-white font-semibold">Plan Features</h3>
-                <ul className="space-y-2 text-slate-300">
-                  <li>• Max {subscription.plan.maxProjects} projects</li>
-                  <li>
-                    • {subscription.plan.unlimitedAi ? "Unlimited" : subscription.plan.maxTokensPerDay.toLocaleString()}{" "}
-                    tokens per day
+                <h3 className="text-white font-semibold font-display text-sm">Plan Features</h3>
+                <ul className="space-y-3 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary/70 shrink-0" />
+                    <span>Max {subscription.plan.maxProjects} projects allowed</span>
                   </li>
-                  {subscription.plan.unlimitedAi && <li>• Unlimited AI usage</li>}
+                  <li className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary/70 shrink-0" />
+                    <span>
+                      {subscription.plan.unlimitedAi ? "Unlimited" : subscription.plan.maxTokensPerDay.toLocaleString()}{" "}
+                      tokens per day limit
+                    </span>
+                  </li>
+                  {subscription.plan.unlimitedAi && (
+                    <li className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary/70 shrink-0" />
+                      <span>Unlimited AI usage enabled</span>
+                    </li>
+                  )}
                 </ul>
               </div>
 
@@ -136,6 +147,7 @@ export const BillingPage = () => {
                     onClick={handleOpenPortal}
                     disabled={openingPortal}
                     variant="outline"
+                    className="rounded-xl border-white/5 bg-white/5 hover:bg-white/10 hover:text-white"
                   >
                     {openingPortal ? (
                       <>
@@ -150,7 +162,7 @@ export const BillingPage = () => {
                     )}
                   </Button>
                 )}
-                <Button onClick={() => navigate("/pricing")} variant="default">
+                <Button onClick={() => navigate("/pricing")} className="rounded-xl bg-primary hover:bg-primary/90 glow-effect font-medium">
                   View Plans
                 </Button>
               </div>
@@ -161,52 +173,52 @@ export const BillingPage = () => {
         {/* Today's Usage */}
         {usage && (
           <div className="space-y-6">
-            <h2 className="text-xl font-bold text-white">Today's Usage</h2>
+            <h2 className="text-xl font-bold text-white font-display">Today's Usage</h2>
 
             <div className="grid md:grid-cols-2 gap-6">
               {/* Tokens Usage */}
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-white/[0.02] border-white/5 rounded-2xl p-2">
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center justify-between">
+                  <CardTitle className="text-white font-display text-base font-bold flex items-center justify-between">
                     Token Usage
-                    <span className="text-sm font-normal text-slate-400">
+                    <span className="text-sm font-normal text-muted-foreground">
                       {usage.tokensUsed} / {usage.tokensLimit}
                     </span>
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-xs text-muted-foreground/60">
                     {((usage.tokensUsed / usage.tokensLimit) * 100).toFixed(1)}% used
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <Progress
                     value={(usage.tokensUsed / usage.tokensLimit) * 100}
-                    className="h-2"
+                    className="h-1.5 bg-white/5 [&>div]:bg-primary rounded-full"
                   />
-                  <p className="text-xs text-slate-400 mt-4">
-                    {usage.tokensLimit - usage.tokensUsed} tokens remaining
+                  <p className="text-[11px] text-muted-foreground/50 pt-2">
+                    {usage.tokensLimit - usage.tokensUsed} tokens remaining today
                   </p>
                 </CardContent>
               </Card>
 
               {/* Previews Usage */}
-              <Card className="bg-slate-800/50 border-slate-700">
+              <Card className="bg-white/[0.02] border-white/5 rounded-2xl p-2">
                 <CardHeader>
-                  <CardTitle className="text-white flex items-center justify-between">
+                  <CardTitle className="text-white font-display text-base font-bold flex items-center justify-between">
                     Active Previews
-                    <span className="text-sm font-normal text-slate-400">
+                    <span className="text-sm font-normal text-muted-foreground">
                       {usage.previewsRunning} / {usage.previewsLimit}
                     </span>
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-xs text-muted-foreground/60">
                     {((usage.previewsRunning / usage.previewsLimit) * 100).toFixed(1)}% in use
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <Progress
                     value={(usage.previewsRunning / usage.previewsLimit) * 100}
-                    className="h-2"
+                    className="h-1.5 bg-white/5 [&>div]:bg-primary rounded-full"
                   />
-                  <p className="text-xs text-slate-400 mt-4">
+                  <p className="text-[11px] text-muted-foreground/50 pt-2">
                     {usage.previewsLimit - usage.previewsRunning} slots available
                   </p>
                 </CardContent>
@@ -215,8 +227,8 @@ export const BillingPage = () => {
           </div>
         )}
 
-        <div className="mt-12">
-          <Button variant="outline" onClick={() => navigate("/projects")}>
+        <div className="mt-16">
+          <Button variant="outline" className="rounded-xl border-white/5 bg-white/5 hover:bg-white/10 hover:text-white px-6 h-10" onClick={() => navigate("/projects")}>
             Back to Projects
           </Button>
         </div>

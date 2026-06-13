@@ -16,17 +16,18 @@ export const generateGradient = (name: string) => {
   const h2 = Math.abs((hash >> 8) % 360);
   const h3 = Math.abs((hash >> 16) % 360);
 
-  const c1 = `hsl(${h1}, 70%, 65%)`;
-  const c2 = `hsl(${h2}, 80%, 75%)`;
-  const c3 = `hsl(${h3}, 60%, 80%)`;
+  // Muted, dark developer-style gradient colors
+  const c1 = `hsl(${h1}, 25%, 15%)`;
+  const c2 = `hsl(${h2}, 30%, 20%)`;
+  const c3 = `hsl(${h3}, 20%, 12%)`;
 
   return {
     background: `
-      radial-gradient(at top left, ${c1}, transparent 70%),
-      radial-gradient(at bottom right, ${c2}, transparent 70%),
-      radial-gradient(at center, ${c3}, transparent 50%),
-      #f0f0f5
+      radial-gradient(at top left, ${c1}, transparent 75%),
+      radial-gradient(at bottom right, ${c2}, transparent 75%),
+      radial-gradient(at center, ${c3}, transparent 60%),
+      #0f0f11
     `,
-    backgroundSize: '150% 150%', // To allow for some blurry overlap
+    backgroundSize: '150% 150%',
   };
 };

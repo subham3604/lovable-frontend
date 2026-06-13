@@ -293,42 +293,42 @@ Please analyze this error and fix the code to resolve it.`;
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-background">
       {/* Header */}
-      <header className="h-12 shrink-0 border-b border-border/50 bg-panel flex items-center justify-between px-3">
-        <div className="flex items-center gap-2">
+      <header className="h-14 shrink-0 border-b border-border bg-panel/75 backdrop-blur-md flex items-center justify-between px-4 sticky top-0 z-50">
+        <div className="flex items-center gap-2.5">
           {project ? (
             <>
               <div
-                className="w-7 h-7 rounded-sm shadow-sm"
+                className="w-8 h-8 rounded-lg shadow-sm border border-white/10"
                 style={generateGradient(project.name)}
               />
-              <span className="font-semibold text-sm">{project.name}</span>
+              <span className="font-semibold text-sm font-display tracking-tight text-white">{project.name}</span>
             </>
           ) : (
             <>
-              <div className="w-7 h-7 rounded-lg bg-primary/20 flex items-center justify-center">
-                <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-primary" />
               </div>
-              <span className="font-semibold text-sm">Loading...</span>
+              <span className="font-semibold text-sm font-display tracking-tight text-white">Loading...</span>
             </>
           )}
-          <span className="text-muted-foreground text-xs ml-2">Previewing last saved version</span>
+          <span className="text-muted-foreground/60 text-xs ml-2 border-l border-white/10 pl-3.5 hidden sm:inline-block">Previewing last saved version</span>
           {project?.role !== 'VIEWER' && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-6 w-6 ml-2 text-muted-foreground">
+                <Button variant="ghost" size="icon" className="h-7 w-7 ml-2 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-lg transition-all">
                   <MoreVertical className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start">
-                <DropdownMenuItem onClick={openRenameDialog}>
+              <DropdownMenuContent align="start" className="bg-card/95 border-white/5 backdrop-blur-md rounded-xl">
+                <DropdownMenuItem onClick={openRenameDialog} className="rounded-lg">
                   <Edit className="w-4 h-4 mr-2" />
                   Rename
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleDownloadProject}>
+                <DropdownMenuItem onClick={handleDownloadProject} className="rounded-lg">
                   <Download className="w-4 h-4 mr-2" />
                   Download
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-red-500 focus:text-red-500" onClick={handleDeleteProject}>
+                <DropdownMenuItem className="text-red-500 focus:text-red-500 rounded-lg" onClick={handleDeleteProject}>
                   <Trash className="w-4 h-4 mr-2" />
                   Delete
                 </DropdownMenuItem>
@@ -338,28 +338,26 @@ Please analyze this error and fix the code to resolve it.`;
         </div>
 
         <div className="flex items-center gap-1">
-
-
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-muted/30 rounded-lg p-0.5 mx-2">
+          <div className="flex items-center bg-white/5 border border-white/5 rounded-xl p-1 mx-2">
             <button
               onClick={() => setViewMode("preview")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all rounded-md ${viewMode === "preview"
-                ? "bg-primary text-primary-foreground"
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold transition-all rounded-lg ${viewMode === "preview"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
                 }`}
             >
-              <Sparkles className="w-3 h-3" />
+              <Sparkles className="w-3.5 h-3.5" />
               Preview
             </button>
             <button
               onClick={() => setViewMode("code")}
-              className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all rounded-md ${viewMode === "code"
-                ? "bg-primary text-primary-foreground"
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold transition-all rounded-lg ${viewMode === "code"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : "text-muted-foreground hover:text-foreground"
                 }`}
             >
-              <Code className="w-3 h-3" />
+              <Code className="w-3.5 h-3.5" />
               Code
             </button>
           </div>
@@ -367,9 +365,9 @@ Please analyze this error and fix the code to resolve it.`;
 
         <div className="flex items-center gap-2">
           {project && (
-            <div className="flex items-center gap-2 px-2 py-1 bg-muted/30 rounded-full border border-border/50">
+            <div className="flex items-center gap-2.5 px-2.5 py-1 bg-white/5 rounded-xl border border-white/5">
               <Avatar className="h-6 w-6 border border-primary/20">
-                <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-semibold">
+                <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-bold">
                   {(() => {
                     const userInfo = getUserInfo();
                     if (userInfo?.name) {
@@ -381,10 +379,10 @@ Please analyze this error and fix the code to resolve it.`;
               </Avatar>
               {project.role && (
                 <span className={cn(
-                  "text-[10px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded",
-                  project.role === 'OWNER' ? "bg-primary/10 text-primary" :
-                    project.role === 'EDITOR' ? "bg-amber-500/10 text-amber-600" :
-                      "bg-muted text-muted-foreground"
+                  "text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md",
+                  project.role === 'OWNER' ? "bg-primary/15 text-primary" :
+                    project.role === 'EDITOR' ? "bg-amber-500/15 text-amber-500" :
+                      "bg-white/5 text-muted-foreground"
                 )}>
                   {project.role}
                 </span>
@@ -395,17 +393,17 @@ Please analyze this error and fix the code to resolve it.`;
           <ShareDialog
             projectId={projectId}
             trigger={
-              <Button variant="outline" size="sm" className="h-8 text-xs font-medium" disabled={project?.role === 'VIEWER'}>
+              <Button variant="outline" size="sm" className="h-9 rounded-xl border-white/5 bg-white/5 hover:bg-white/10 hover:text-white text-xs font-medium" disabled={project?.role === 'VIEWER'}>
                 Share
               </Button>
             }
           />
           {project?.role !== 'VIEWER' && (
             <>
-              <Button variant="outline" size="sm" className="h-8 text-xs">
+              <Button variant="outline" size="sm" className="h-9 rounded-xl border-white/5 bg-white/5 hover:bg-white/10 hover:text-white text-xs" onClick={() => navigate("/pricing")}>
                 Upgrade
               </Button>
-              <Button size="sm" className="h-8 text-xs bg-primary hover:bg-primary/90">
+              <Button size="sm" className="h-9 rounded-xl text-xs bg-primary hover:bg-primary/90 glow-effect font-medium">
                 Publish
               </Button>
             </>
@@ -414,7 +412,7 @@ Please analyze this error and fix the code to resolve it.`;
             variant="ghost"
             size="icon"
             onClick={handleLogout}
-            className="h-8 w-8 text-muted-foreground hover:text-foreground"
+            className="h-9 w-9 text-muted-foreground hover:text-foreground hover:bg-white/5 rounded-xl"
           >
             <LogOut className="w-4 h-4" />
           </Button>
