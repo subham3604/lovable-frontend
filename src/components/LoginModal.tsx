@@ -84,6 +84,7 @@ export function LoginModal() {
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10 h-12 bg-muted/50 border-border/50 focus:border-primary rounded-xl text-sm"
                   disabled={isLoading}
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -102,6 +103,7 @@ export function LoginModal() {
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 h-12 bg-muted/50 border-border/50 focus:border-primary rounded-xl text-sm"
                   disabled={isLoading}
+                  autoComplete="new-password"
                 />
               </div>
             </div>
