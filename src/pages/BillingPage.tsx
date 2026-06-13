@@ -9,6 +9,20 @@ import { SubscriptionResponse, UsageTodayResponse } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 import { format } from "date-fns";
 
+const PLAN_PRICES: Record<string, number> = {
+  "pro plan": 199,
+  "elite plan": 699,
+  "unlimited plan": 1599,
+  // also match without suffix just in case
+  pro: 199,
+  elite: 699,
+  unlimited: 1599,
+};
+
+const getPlanPrice = (name: string): number | null => {
+  return PLAN_PRICES[name.toLowerCase()] ?? null;
+};
+
 export const BillingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -86,7 +100,7 @@ export const BillingPage = () => {
                 <div>
                   <p className="text-slate-400 text-sm mb-2">Plan</p>
                   <p className="text-2xl font-bold text-white">{subscription.plan.name}</p>
-                  <p className="text-slate-400 mt-1">${subscription.plan.price}/month</p>
+                  <p className="text-slate-400 mt-1">₹{getPlanPrice(subscription.plan.name) ?? subscription.plan.price}/month</p>
                 </div>
                 <div>
                   <p className="text-slate-400 text-sm mb-2">Status</p>

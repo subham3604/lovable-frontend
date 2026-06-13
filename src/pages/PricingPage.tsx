@@ -8,6 +8,20 @@ import { api, isAuthenticated } from "@/lib/api";
 import { PlanResponse, SubscriptionResponse } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
+const PLAN_PRICES: Record<string, number> = {
+  "pro plan": 199,
+  "elite plan": 699,
+  "unlimited plan": 1599,
+  // also match without suffix just in case
+  pro: 199,
+  elite: 699,
+  unlimited: 1599,
+};
+
+const getPlanPrice = (name: string): number | null => {
+  return PLAN_PRICES[name.toLowerCase()] ?? null;
+};
+
 export const PricingPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -115,7 +129,7 @@ export const PricingPage = () => {
                 <CardHeader>
                   <CardTitle className="text-white">{plan.name}</CardTitle>
                   <CardDescription className="text-slate-400">
-                    <span className="text-3xl font-bold text-white">${plan.price}</span>
+                    <span className="text-3xl font-bold text-white">₹{getPlanPrice(plan.name) ?? plan.price}</span>
                     <span className="text-slate-400">/month</span>
                   </CardDescription>
                 </CardHeader>
