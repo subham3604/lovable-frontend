@@ -51,7 +51,7 @@ export const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
       </div>
     );
@@ -59,8 +59,8 @@ export const ProfilePage = () => {
 
   if (!profile) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center">
-        <Button onClick={() => navigate("/login")} variant="default">
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Button onClick={() => navigate("/login")} className="bg-primary hover:bg-primary/90 rounded-xl">
           Go to Login
         </Button>
       </div>
@@ -77,55 +77,55 @@ export const ProfilePage = () => {
     : (profile.username ? profile.username[0].toUpperCase() : "U");
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 p-6">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-8">User Profile</h1>
+    <div className="min-h-screen bg-background py-16 px-6 relative overflow-hidden">
+      <div className="max-w-2xl mx-auto relative z-10">
+        <h1 className="text-3xl md:text-4xl font-bold text-white mb-10 tracking-tight font-display bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">User Profile</h1>
 
-        <Card className="bg-slate-800/50 border-slate-700">
+        <Card className="bg-white/[0.02] border-white/5 rounded-2xl backdrop-blur-md p-2">
           <CardHeader>
-            <CardTitle className="text-white">Account Information</CardTitle>
+            <CardTitle className="text-white font-display text-lg font-bold">Account Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             {/* Avatar and Name */}
-            <div className="flex items-center gap-4">
-              <Avatar className="w-16 h-16 bg-primary/20 border-2 border-primary">
-                <AvatarFallback className="text-white font-bold">{initials}</AvatarFallback>
+            <div className="flex items-center gap-4 bg-white/[0.02] p-5 rounded-xl border border-white/5">
+              <Avatar className="w-16 h-16 bg-primary/10 border-2 border-primary/30">
+                <AvatarFallback className="text-primary font-bold text-lg font-display">{initials}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="text-2xl font-bold text-white">{profile.name || profile.username}</p>
-                <p className="text-slate-400">{profile.username}</p>
+                <p className="text-xl font-bold text-white font-display">{profile.name || profile.username}</p>
+                <p className="text-muted-foreground/60 text-sm">{profile.username}</p>
               </div>
             </div>
 
-            <div className="border-t border-slate-700 pt-6">
-              <div className="space-y-4">
+            <div className="border-t border-white/5 pt-6">
+              <div className="space-y-5">
                 <div>
-                  <p className="text-slate-400 text-sm mb-1">Full Name</p>
-                  <p className="text-white">{profile.name || "N/A"}</p>
+                  <p className="text-muted-foreground/50 text-xs font-semibold uppercase tracking-wider mb-1">Full Name</p>
+                  <p className="text-white text-sm font-medium">{profile.name || "N/A"}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 text-sm mb-1">Email / Username</p>
-                  <p className="text-white">{profile.username}</p>
+                  <p className="text-muted-foreground/50 text-xs font-semibold uppercase tracking-wider mb-1">Email / Username</p>
+                  <p className="text-white text-sm font-medium">{profile.username}</p>
                 </div>
                 <div>
-                  <p className="text-slate-400 text-sm mb-1">User ID</p>
-                  <p className="text-white font-mono">{profile.id}</p>
+                  <p className="text-muted-foreground/50 text-xs font-semibold uppercase tracking-wider mb-1">User ID</p>
+                  <p className="text-white font-mono text-xs font-medium bg-white/5 inline-block px-2.5 py-1 rounded-md border border-white/5">{profile.id}</p>
                 </div>
               </div>
             </div>
 
-            <div className="border-t border-slate-700 pt-6 space-y-4">
+            <div className="border-t border-white/5 pt-6 space-y-3">
               <Button
                 onClick={() => navigate("/billing")}
                 variant="outline"
-                className="w-full"
+                className="w-full h-11 rounded-xl border-white/5 bg-white/5 hover:bg-white/10 hover:text-white"
               >
                 View Billing & Subscription
               </Button>
               <Button
                 onClick={handleLogout}
                 variant="destructive"
-                className="w-full"
+                className="w-full h-11 rounded-xl bg-destructive hover:bg-destructive/90"
               >
                 <LogOut className="w-4 h-4 mr-2" />
                 Logout
@@ -134,8 +134,8 @@ export const ProfilePage = () => {
           </CardContent>
         </Card>
 
-        <div className="mt-8">
-          <Button variant="outline" onClick={() => navigate("/projects")}>
+        <div className="mt-10">
+          <Button variant="outline" className="rounded-xl border-white/5 bg-white/5 hover:bg-white/10 hover:text-white px-6 h-10" onClick={() => navigate("/projects")}>
             Back to Projects
           </Button>
         </div>

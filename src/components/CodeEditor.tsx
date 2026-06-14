@@ -1,9 +1,45 @@
-import CodeMirror from '@uiw/react-codemirror';
+import CodeMirror, { EditorView } from '@uiw/react-codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { json } from '@codemirror/lang-json';
 import { css } from '@codemirror/lang-css';
 import { FileCode, Loader2 } from "lucide-react";
-import {githubDark} from '@uiw/codemirror-theme-github';
+import { githubDark } from '@uiw/codemirror-theme-github';
+
+// Custom theme extension to match CodeMirror to the charcoal dashboard theme (#0d0d11)
+const charcoalEditorTheme = EditorView.theme({
+  "&": {
+    backgroundColor: "#0d0d11 !important",
+    color: "#e2e8f0 !important"
+  },
+  ".cm-scroller": {
+    fontFamily: "var(--font-mono, JetBrains Mono, Fira Code, monospace) !important",
+    fontSize: "13px"
+  },
+  ".cm-content": {
+    caretColor: "#ffffff"
+  },
+  ".cm-cursor, .cm-dropCursor": {
+    borderLeftColor: "#ffffff"
+  },
+  "&.cm-focused .cm-cursor": {
+    borderLeftColor: "#ffffff"
+  },
+  "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": {
+    backgroundColor: "rgba(255, 255, 255, 0.1) !important"
+  },
+  ".cm-gutters": {
+    backgroundColor: "#0d0d11 !important",
+    color: "#475569 !important",
+    borderRight: "1px solid rgba(255, 255, 255, 0.04) !important"
+  },
+  ".cm-activeLine": {
+    backgroundColor: "rgba(255, 255, 255, 0.02) !important"
+  },
+  ".cm-activeLineGutter": {
+    backgroundColor: "rgba(255, 255, 255, 0.02) !important",
+    color: "#94a3b8 !important"
+  }
+}, { dark: true });
 
 interface CodeEditorProps {
   content: string;
@@ -59,7 +95,7 @@ export function CodeEditor({ content, filePath, isLoading, onCodeChange }: CodeE
         height="100%"
         theme={githubDark}
         editable={false}
-        extensions={getLanguage(filePath)}
+        extensions={[...getLanguage(filePath), charcoalEditorTheme]}
         onChange={(value) => onCodeChange?.(value)}
         basicSetup={{
           lineNumbers: true,
