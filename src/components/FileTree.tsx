@@ -112,8 +112,8 @@ function FileTreeItem({ node, depth, selectedPath, onSelectFile, searchActive }:
         className={cn(
           "file-tree-item flex items-center gap-2 px-2 py-1 rounded-md cursor-pointer transition-all duration-150 mx-1.5 my-0.5",
           isSelected 
-            ? "bg-primary/10 text-primary-foreground font-medium border-l-2 border-primary pl-1" 
-            : "text-muted-foreground hover:text-foreground hover:bg-muted/20"
+            ? "bg-white/[0.06] text-white font-medium border-l-2 border-white pl-1.5" 
+            : "text-muted-foreground/85 hover:text-foreground hover:bg-white/[0.04]"
         )}
         style={{ paddingLeft: `${depth * 14 + (isSelected ? 6 : 8)}px` }}
         onClick={handleClick}
