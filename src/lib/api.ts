@@ -4,14 +4,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 const originalFetch = window.fetch.bind(window);
 const fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-  const headers = new Headers(init?.headers);
-  headers.set("ngrok-skip-browser-warning", "true");
-
-  const response = await originalFetch(input, {
-    ...init,
-    headers,
-  });
-
+  const response = await originalFetch(input, init);
   if (response.status === 401) {
     const urlStr = input.toString();
     if (!urlStr.includes("/api/auth/login") && !urlStr.includes("/api/auth/signup")) {
