@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { FileTree } from "./FileTree";
 import { CodeEditor } from "./CodeEditor";
 import { FileTabs } from "./FileTabs";
@@ -34,7 +34,7 @@ export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
   useEffect(() => {
     const savedTabs = localStorage.getItem(getTabsKey(projectId));
     const savedActiveTab = localStorage.getItem(getActiveTabKey(projectId));
-    
+
     if (savedTabs) {
       try {
         const tabs = JSON.parse(savedTabs);
@@ -74,7 +74,7 @@ export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
       try {
         const fileTree = await api.getFiles(projectId);
         setFiles(fileTree);
-        
+
         // If no tabs are open, default to pages/Index.tsx
         if (openTabs.length === 0) {
           const defaultPaths = ["src/pages/Index.tsx", "pages/Index.tsx"];
@@ -96,6 +96,11 @@ export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
     loadFiles();
   }, [projectId]);
 
+  const updatedFilesRef = useRef(updatedFiles);
+  useEffect(() => {
+    updatedFilesRef.current = updatedFiles;
+  }, [updatedFiles]);
+
   // Load file content when active tab changes
   useEffect(() => {
     if (!activeTab) {
@@ -104,8 +109,8 @@ export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
     }
 
     // Check if we have an updated version from streaming
-    if (updatedFiles.has(activeTab)) {
-      setFileContent(updatedFiles.get(activeTab)!);
+    if (updatedFilesRef.current.has(activeTab)) {
+      setFileContent(updatedFilesRef.current.get(activeTab)!);
       return;
     }
 
@@ -123,7 +128,7 @@ export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
     };
 
     loadContent();
-  }, [projectId, activeTab, updatedFiles]);
+  }, [projectId, activeTab]);
 
   // Update content when streaming updates arrive for active file
   useEffect(() => {
@@ -143,14 +148,14 @@ export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
   const handleCloseTab = useCallback((path: string) => {
     setOpenTabs((prev) => {
       const newTabs = prev.filter((t) => t !== path);
-      
+
       // If closing active tab, switch to another tab
       if (activeTab === path) {
         const closingIndex = prev.indexOf(path);
         const newActiveIndex = Math.min(closingIndex, newTabs.length - 1);
         setActiveTab(newTabs[newActiveIndex] || null);
       }
-      
+
       return newTabs;
     });
   }, [activeTab]);
@@ -185,7 +190,7 @@ export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
           onSelectTab={handleSelectTab}
           onCloseTab={handleCloseTab}
         />
-        
+
         {/* Editor */}
         <div className="flex-1 overflow-hidden">
           <CodeEditor

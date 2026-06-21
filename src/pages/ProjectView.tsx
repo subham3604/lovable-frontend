@@ -83,6 +83,24 @@ export function ProjectView() {
     loadData();
   }, [projectId, toast]);
 
+  // Send periodic heartbeat to keep the project preview runner/pod alive
+  useEffect(() => {
+    if (!projectId) return;
+
+    // Send initial heartbeat
+    api.heartbeat(projectId).catch((err) => {
+      console.error("Failed to send initial heartbeat:", err);
+    });
+
+    const interval = setInterval(() => {
+      api.heartbeat(projectId).catch((err) => {
+        console.error("Failed to send heartbeat:", err);
+      });
+    }, 30000); // every 30 seconds
+
+    return () => clearInterval(interval);
+  }, [projectId]);
+
   const handleLogout = () => {
     removeAuthToken();
     removeUserInfo();

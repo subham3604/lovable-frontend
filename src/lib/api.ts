@@ -184,6 +184,17 @@ export const api = {
     return response.json();
   },
 
+  async heartbeat(projectId: string): Promise<void> {
+    const response = await fetch(`${BASE_URL}/api/projects/${projectId}/heartbeat`, {
+      method: "POST",
+      headers: { ...getAuthHeaders() },
+    });
+
+    if (!response.ok) {
+      throw new Error("Heartbeat failed");
+    }
+  },
+
   async getProjects(): Promise<ProjectSummaryResponse[]> {
     const response = await fetch(`${BASE_URL}/api/projects`, {
       headers: { ...getAuthHeaders() },
@@ -510,7 +521,7 @@ export const api = {
               rawContentBuffer += content;
 
               // Send raw chunk directly to the UI
-              console.log("streamChat onChunk:", JSON.stringify(content));
+              // console.log("streamChat onChunk:", JSON.stringify(content));
               onChunk(content);
 
               // Extract files and notify onFile in real-time
