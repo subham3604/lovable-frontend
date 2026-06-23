@@ -28,6 +28,7 @@ export function ProjectView() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isStreaming, setIsStreaming] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("preview");
+  const [activeFile, setActiveFile] = useState<string | null>(null);
   const [updatedFiles, setUpdatedFiles] = useState<Map<string, string>>(new Map());
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const [runtimeError, setRuntimeError] = useState<RuntimeError | null>(null);
@@ -314,20 +315,28 @@ Please analyze this error and fix the code to resolve it.`;
       <header className="h-14 shrink-0 border-b border-border bg-panel/75 backdrop-blur-md flex items-center justify-between px-4 sticky top-0 z-50">
         <div className="flex items-center gap-2.5">
           {project ? (
-            <>
+            <button
+              onClick={() => navigate("/projects")}
+              className="flex items-center gap-2.5 hover:opacity-85 active:opacity-75 transition-all text-left"
+              title="Go to Dashboard"
+            >
               <div
                 className="w-8 h-8 rounded-lg shadow-sm border border-white/10"
                 style={generateGradient(project.name)}
               />
               <span className="font-semibold text-sm font-display tracking-tight text-white">{project.name}</span>
-            </>
+            </button>
           ) : (
-            <>
+            <button
+              onClick={() => navigate("/projects")}
+              className="flex items-center gap-2.5 hover:opacity-85 active:opacity-75 transition-all text-left"
+              title="Go to Dashboard"
+            >
               <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-primary" />
               </div>
               <span className="font-semibold text-sm font-display tracking-tight text-white">Loading...</span>
-            </>
+            </button>
           )}
           <span className="text-muted-foreground/60 text-xs ml-2 border-l border-white/10 pl-3.5 hidden sm:inline-block">Previewing last saved version</span>
           {project?.role !== 'VIEWER' && (
@@ -449,6 +458,10 @@ Please analyze this error and fix the code to resolve it.`;
                 isStreaming={isStreaming}
                 isLoading={isLoadingHistory}
                 readOnly={project?.role === 'VIEWER'}
+                onSelectFile={(path) => {
+                  setViewMode("code");
+                  setActiveFile(path);
+                }}
               />
             </div>
           </ResizablePanel>
@@ -460,7 +473,12 @@ Please analyze this error and fix the code to resolve it.`;
             <div className="h-full">
               <div className="h-full relative">
                 <div className={cn("h-full absolute inset-0", viewMode !== "code" && "hidden")}>
-                  <CodePanel projectId={projectId} updatedFiles={updatedFiles} />
+                  <CodePanel 
+                    projectId={projectId} 
+                    updatedFiles={updatedFiles} 
+                    activeFile={activeFile}
+                    onActiveTabChange={setActiveFile}
+                  />
                 </div>
                 <div className={cn("h-full absolute inset-0", viewMode !== "preview" && "hidden")}>
                   <PreviewPanel

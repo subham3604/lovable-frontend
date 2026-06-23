@@ -6,10 +6,42 @@ import {
   Database, 
   FileEdit,
   Loader2, 
+  FileCode,
+  FileJson,
+  FileText,
+  File
 } from 'lucide-react';
 import { ChatEvent, ChatEventType } from '@/lib/types';
 
-export const ChatEventRenderer = ({ event, isLoading }: { event: ChatEvent, isLoading?: boolean }) => {
+function getFileIcon(path: string) {
+  const ext = path.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'js':
+    case 'jsx':
+    case 'ts':
+    case 'tsx':
+    case 'html':
+      return <FileCode className="w-3.5 h-3.5 mr-1.5 text-blue-400 shrink-0" />;
+    case 'json':
+      return <FileJson className="w-3.5 h-3.5 mr-1.5 text-yellow-500 shrink-0" />;
+    case 'css':
+      return <FileCode className="w-3.5 h-3.5 mr-1.5 text-pink-400 shrink-0" />;
+    case 'md':
+      return <FileText className="w-3.5 h-3.5 mr-1.5 text-emerald-400 shrink-0" />;
+    default:
+      return <File className="w-3.5 h-3.5 mr-1.5 text-muted-foreground shrink-0" />;
+  }
+}
+
+export const ChatEventRenderer = ({ 
+  event, 
+  isLoading, 
+  onSelectFile 
+}: { 
+  event: ChatEvent, 
+  isLoading?: boolean, 
+  onSelectFile?: (path: string) => void 
+}) => {
   switch (event.type) {
     case ChatEventType.THOUGHT:
       return (
@@ -24,6 +56,7 @@ export const ChatEventRenderer = ({ event, isLoading }: { event: ChatEvent, isLo
                 icon={<Database className="w-4 h-4" />} 
                 label="Read" 
                 event={event} 
+                onSelectFile={onSelectFile}
               />;
 
     case ChatEventType.FILE_EDIT:
@@ -33,6 +66,7 @@ export const ChatEventRenderer = ({ event, isLoading }: { event: ChatEvent, isLo
                 event={event} 
                 hideToggle 
                 forceSingleLine={isLoading} // Keep it simple while loading
+                onSelectFile={onSelectFile}
               />;
 
     case ChatEventType.MESSAGE:
@@ -55,13 +89,15 @@ const CollapsibleEvent = ({
   label, 
   event,
   hideToggle = false,
-  forceSingleLine = false
+  forceSingleLine = false,
+  onSelectFile
 }: { 
   icon: React.ReactNode, 
   label: string, 
   event: ChatEvent,
   hideToggle?: boolean,
-    forceSingleLine?: boolean
+  forceSingleLine?: boolean,
+  onSelectFile?: (path: string) => void
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
@@ -83,10 +119,15 @@ const CollapsibleEvent = ({
           <div className="flex items-center gap-2 overflow-hidden">
             <span className="text-[#949494] text-[13px] font-medium shrink-0">{label}</span>
             
-            {/* File Name Badge */}
-            <span className="bg-[#262626] text-[#ececec] text-[12px] px-2 py-0.5 rounded-md font-mono border border-[#333] truncate">
-              {files[0].split('/').pop()}
-            </span>
+            {/* File Name Badge - Clickable Button */}
+            <button
+              onClick={() => onSelectFile?.(files[0])}
+              className="inline-flex items-center bg-[#222] hover:bg-primary/10 border border-[#333] hover:border-primary/40 text-[#ececec] hover:text-primary text-[12px] px-2.5 py-0.5 rounded-md font-mono truncate transition-all duration-200 cursor-pointer active:scale-95 shadow-sm hover:shadow-[0_0_10px_rgba(59,130,246,0.15)]"
+              title={`Open ${files[0]}`}
+            >
+              {getFileIcon(files[0])}
+              <span>{files[0].split('/').pop()}</span>
+            </button>
 
             {/* +X more logic */}
             {!isExpanded && hasMultipleFiles && (
@@ -114,9 +155,15 @@ const CollapsibleEvent = ({
             <div key={idx} className="flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
                <div className="text-[#949494] shrink-0 opacity-0">{icon}</div> {/* Invisible spacer icon */}
                <span className="text-[#949494] text-[13px] font-medium w-8 shrink-0">{label}</span>
-               <span className="bg-[#262626] text-[#ececec] text-[12px] px-2 py-0.5 rounded-md font-mono border border-[#333] truncate">
-                 {file.split('/').pop()}
-               </span>
+               {/* Clickable File Name Badge */}
+               <button
+                 onClick={() => onSelectFile?.(file)}
+                 className="inline-flex items-center bg-[#222] hover:bg-primary/10 border border-[#333] hover:border-primary/40 text-[#ececec] hover:text-primary text-[12px] px-2.5 py-0.5 rounded-md font-mono truncate transition-all duration-200 cursor-pointer active:scale-95 shadow-sm hover:shadow-[0_0_10px_rgba(59,130,246,0.15)]"
+                 title={`Open ${file}`}
+               >
+                 {getFileIcon(file)}
+                 <span>{file.split('/').pop()}</span>
+               </button>
             </div>
           ))}
         </div>

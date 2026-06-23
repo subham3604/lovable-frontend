@@ -184,6 +184,18 @@ export const api = {
     return response.json();
   },
 
+  async getPreviewStatus(projectId: string): Promise<{ deployed: boolean }> {
+    const response = await fetch(`${BASE_URL}/api/projects/${projectId}/preview-status`, {
+      headers: { ...getAuthHeaders() },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch preview status");
+    }
+
+    return response.json();
+  },
+
   async heartbeat(projectId: string): Promise<void> {
     const response = await fetch(`${BASE_URL}/api/projects/${projectId}/heartbeat`, {
       method: "POST",

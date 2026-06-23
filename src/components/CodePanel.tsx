@@ -7,6 +7,8 @@ import { api, FileNode, OPEN_TABS_KEY, ACTIVE_TAB_KEY } from "@/lib/api";
 interface CodePanelProps {
   projectId: string;
   updatedFiles: Map<string, string>;
+  activeFile?: string | null;
+  onActiveTabChange?: (path: string | null) => void;
 }
 
 // Helper to find a file by path in the tree
@@ -22,13 +24,26 @@ function findFileInTree(files: FileNode[], targetPath: string): boolean {
 const getTabsKey = (projectId: string) => `${OPEN_TABS_KEY}_${projectId}`;
 const getActiveTabKey = (projectId: string) => `${ACTIVE_TAB_KEY}_${projectId}`;
 
-export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
+export function CodePanel({ projectId, updatedFiles, activeFile, onActiveTabChange }: CodePanelProps) {
   const [files, setFiles] = useState<FileNode[]>([]);
   const [openTabs, setOpenTabs] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<string | null>(null);
   const [fileContent, setFileContent] = useState<string>("");
   const [isLoadingTree, setIsLoadingTree] = useState(true);
   const [isLoadingFile, setIsLoadingFile] = useState(false);
+
+  // Synchronize activeFile prop with local tabs state
+  useEffect(() => {
+    if (activeFile) {
+      setOpenTabs((prev) => {
+        if (!prev.includes(activeFile)) {
+          return [...prev, activeFile];
+        }
+        return prev;
+      });
+      setActiveTab(activeFile);
+    }
+  }, [activeFile]);
 
   // Load tabs from localStorage
   useEffect(() => {
@@ -58,14 +73,15 @@ export function CodePanel({ projectId, updatedFiles }: CodePanelProps) {
     }
   }, [openTabs, projectId]);
 
-  // Save active tab to localStorage
+  // Save active tab to localStorage and notify parent
   useEffect(() => {
     if (activeTab) {
       localStorage.setItem(getActiveTabKey(projectId), activeTab);
     } else {
       localStorage.removeItem(getActiveTabKey(projectId));
     }
-  }, [activeTab, projectId]);
+    onActiveTabChange?.(activeTab);
+  }, [activeTab, projectId, onActiveTabChange]);
 
   // Load file tree
   useEffect(() => {

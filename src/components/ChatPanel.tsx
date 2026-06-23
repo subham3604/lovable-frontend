@@ -25,9 +25,10 @@ interface ChatPanelProps {
   isStreaming: boolean;
   isLoading?: boolean;
   readOnly?: boolean;
+  onSelectFile?: (path: string) => void;
 }
 
-export function ChatPanel({ messages, onSendMessage, isStreaming, isLoading, readOnly }: ChatPanelProps) {
+export function ChatPanel({ messages, onSendMessage, isStreaming, isLoading, readOnly, onSelectFile }: ChatPanelProps) {
   const [input, setInput] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -87,8 +88,12 @@ export function ChatPanel({ messages, onSendMessage, isStreaming, isLoading, rea
         ) : (
           <div className="flex flex-col">
             {messages.map((message) => (
-              <MessageItem key={message.id} message={message}
-                isStreaming={isStreaming && message.isStreaming} />
+              <MessageItem 
+                key={message.id} 
+                message={message}
+                isStreaming={isStreaming && message.isStreaming} 
+                onSelectFile={onSelectFile}
+              />
             ))}
           </div>
         )}
@@ -147,7 +152,15 @@ export function ChatPanel({ messages, onSendMessage, isStreaming, isLoading, rea
 }
 
 // Inner Component to handle logic per message
-function MessageItem({ message, isStreaming }: { message: ChatMessage, isStreaming: boolean }) {
+function MessageItem({ 
+  message, 
+  isStreaming,
+  onSelectFile 
+}: { 
+  message: ChatMessage, 
+  isStreaming: boolean,
+  onSelectFile?: (path: string) => void 
+}) {
   // Use the stream parser to turn raw XML text into Event objects live
   const liveEvents = useStreamParser(message.content || "");
 
@@ -195,6 +208,7 @@ function MessageItem({ message, isStreaming }: { message: ChatMessage, isStreami
                       key={idx}
                       event={event}
                       isLoading={isStreaming && isLast}
+                      onSelectFile={onSelectFile}
                     />
                   );
                 })}
