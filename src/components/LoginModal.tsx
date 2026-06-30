@@ -93,12 +93,12 @@ export function LoginModal() {
                 <Input
                   id="password"
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="pl-10 h-11 bg-background border-border focus-visible:ring-ring rounded-lg text-sm"
                   disabled={isLoading}
-                  autoComplete="new-password"
+                  autoComplete="current-password"
                 />
               </div>
             </div>
