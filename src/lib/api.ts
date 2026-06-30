@@ -1,6 +1,6 @@
 import { ChatMessage, DeployResponse, FileNode, LoginCredentials, LoginResponse, ProjectSummaryResponse, ProjectRequest, ProjectResponse, ProjectMember, ProjectRole, SignupRequest, AuthResponse, UserProfileResponse, MemberResponse, PlanResponse, SubscriptionResponse, UsageTodayResponse, PlanLimitsResponse, CheckoutRequest, CheckoutResponse, PortalResponse } from "./types";
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const BASE_URL = import.meta.env.VITE_API_URL || "https://api.genesis-app.uk";
 
 const originalFetch = window.fetch.bind(window);
 const fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
