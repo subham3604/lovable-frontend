@@ -9,6 +9,7 @@ interface CodePanelProps {
   updatedFiles: Map<string, string>;
   activeFile?: string | null;
   onActiveTabChange?: (path: string | null) => void;
+  isStreaming?: boolean;
 }
 
 // Helper to find a file by path in the tree
@@ -24,7 +25,7 @@ function findFileInTree(files: FileNode[], targetPath: string): boolean {
 const getTabsKey = (projectId: string) => `${OPEN_TABS_KEY}_${projectId}`;
 const getActiveTabKey = (projectId: string) => `${ACTIVE_TAB_KEY}_${projectId}`;
 
-export function CodePanel({ projectId, updatedFiles, activeFile, onActiveTabChange }: CodePanelProps) {
+export function CodePanel({ projectId, updatedFiles, activeFile, onActiveTabChange, isStreaming }: CodePanelProps) {
   const [files, setFiles] = useState<FileNode[]>([]);
   const [openTabs, setOpenTabs] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<string | null>(null);
@@ -83,34 +84,59 @@ export function CodePanel({ projectId, updatedFiles, activeFile, onActiveTabChan
     onActiveTabChange?.(activeTab);
   }, [activeTab, projectId, onActiveTabChange]);
 
-  // Load file tree
-  useEffect(() => {
-    const loadFiles = async () => {
-      setIsLoadingTree(true);
-      try {
-        const fileTree = await api.getFiles(projectId);
-        setFiles(fileTree);
+  const loadFiles = useCallback(async (shouldSetDefaultTab = false) => {
+    setIsLoadingTree(true);
+    try {
+      const fileTree = await api.getFiles(projectId);
+      setFiles(fileTree);
 
-        // If no tabs are open, default to pages/Index.tsx
-        if (openTabs.length === 0) {
+      // Filter out any open tabs that no longer exist in the file tree
+      setOpenTabs((currentOpenTabs) => {
+        let updatedTabs = currentOpenTabs;
+        if (!shouldSetDefaultTab) {
+          updatedTabs = currentOpenTabs.filter((tabPath) => findFileInTree(fileTree, tabPath));
+          
+          setActiveTab((currentActiveTab) => {
+            if (currentActiveTab && !updatedTabs.includes(currentActiveTab)) {
+              return updatedTabs.length > 0 ? updatedTabs[0] : null;
+            }
+            return currentActiveTab;
+          });
+        }
+
+        if (shouldSetDefaultTab && updatedTabs.length === 0) {
           const defaultPaths = ["src/pages/Index.tsx", "pages/Index.tsx"];
           for (const defaultPath of defaultPaths) {
             if (findFileInTree(fileTree, defaultPath)) {
-              setOpenTabs([defaultPath]);
               setActiveTab(defaultPath);
-              break;
+              return [defaultPath];
             }
           }
         }
-      } catch (error) {
-        console.error("Failed to load files:", error);
-      } finally {
-        setIsLoadingTree(false);
-      }
-    };
 
-    loadFiles();
+        return updatedTabs;
+      });
+    } catch (error) {
+      console.error("Failed to load files:", error);
+    } finally {
+      setIsLoadingTree(false);
+    }
   }, [projectId]);
+
+  // Load file tree on project change
+  useEffect(() => {
+    loadFiles(true);
+  }, [projectId, loadFiles]);
+
+  const wasStreamingRef = useRef(false);
+
+  // Reload file tree when streaming finishes
+  useEffect(() => {
+    if (wasStreamingRef.current && !isStreaming) {
+      loadFiles(false);
+    }
+    wasStreamingRef.current = isStreaming ?? false;
+  }, [isStreaming, loadFiles]);
 
   const updatedFilesRef = useRef(updatedFiles);
   useEffect(() => {

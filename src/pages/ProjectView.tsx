@@ -478,6 +478,7 @@ Please analyze this error and fix the code to resolve it.`;
                     updatedFiles={updatedFiles} 
                     activeFile={activeFile}
                     onActiveTabChange={setActiveFile}
+                    isStreaming={isStreaming}
                   />
                 </div>
                 <div className={cn("h-full absolute inset-0", viewMode !== "preview" && "hidden")}>
